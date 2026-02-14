@@ -110,36 +110,23 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-    Internet["🌐 Internet Traffic"]
-    
-    Internet --> L1
+    Attack["🦹 Attack Attempt"]
+    Attack --> L1{"Layer 1: Network ACL\nSubnet Level\nAllow: HTTP, HTTPS, SSH\nDeny: Everything else"}
+    L1 -->|Blocked| Deny1["❌ Access Denied"]
+    L1 -->|Passed| L2{"Layer 2: Security Group\nInstance Level\nWeb SG: Allow 80, 443\nApp SG: Web Server only\nBastion SG: SSH only"}
+    L2 -->|Blocked| Deny2["❌ Access Denied"]
+    L2 -->|Passed| L3{"Layer 3: IAM Role\nPermission Level\nEC2 least privilege\nNo wildcard permissions\nSpecific ARNs only"}
+    L3 -->|Blocked| Deny3["❌ Access Denied"]
+    L3 -->|Passed| Access["✅ Access Granted\nLogged in CloudTrail"]
 
-    subgraph L1["Layer 1: Network ACL (Subnet Level)"]
-        NACL["Allow: HTTP, HTTPS, SSH<br/>Deny: Everything else"]
-    end
-
-    L1 --> L2
-
-    subgraph L2["Layer 2: Security Group (Instance Level)"]
-        SG["Web SG: Allow 80, 443 from internet<br/>App SG: Allow ONLY from Web SG<br/>Bastion SG: Allow SSH only"]
-    end
-
-    L2 --> L3
-
-    subgraph L3["Layer 3: IAM Role (API Level)"]
-        IAM["EC2 roles with least privilege<br/>No wildcard permissions<br/>Specific resource ARNs only"]
-    end
-
-    L3 --> L4
-
-    subgraph L4["Layer 4: Encryption (Data Level)"]
-        ENC["EBS volumes: AES-256 encrypted<br/>S3 bucket: AES-256 encrypted<br/>Data protected at rest"]
-    end
-
-    style L1 fill:#ffe6e6
-    style L2 fill:#fff0e6
-    style L3 fill:#e6f3ff
-    style L4 fill:#e6ffe6
+    style Attack fill:#ff6b6b,color:#ffffff
+    style L1 fill:#ffcccc,color:#000000
+    style L2 fill:#ffe8cc,color:#000000
+    style L3 fill:#cce5ff,color:#000000
+    style Deny1 fill:#ff4444,color:#ffffff
+    style Deny2 fill:#ff4444,color:#ffffff
+    style Deny3 fill:#ff4444,color:#ffffff
+    style Access fill:#44bb44,color:#ffffff
 ```
 
 ---
