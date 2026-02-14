@@ -33,51 +33,48 @@ A production-ready, secure cloud infrastructure implementing defense-in-depth se
 ```mermaid
 graph TB
     Internet["🌐 Internet"]
-
-    subgraph AWS["☁️ AWS Account: 103976430153"]
-
-        IGW["🚪 Internet Gateway"]
-
-        subgraph VPC["VPC: 10.0.0.0/16"]
-
-            subgraph PublicSubnet["📡 Public Subnet: 10.0.1.0/24"]
-                WebServer["🌐 Web Server<br/>Public IP: 44.200.32.245<br/>Private IP: 10.0.1.x<br/>Encrypted EBS ✅"]
-                Bastion["🔐 Bastion Host<br/>Public IP: 3.228.6.170<br/>SSH Jump Server<br/>Encrypted EBS ✅"]
-            end
-
-            subgraph PrivateSubnet["🔒 Private Subnet: 10.0.2.0/24"]
-                AppServer["⚙️ App Server<br/>NO Public IP 🔒<br/>Private IP: 10.0.2.x<br/>Encrypted EBS ✅"]
-            end
-
-        end
-
-        subgraph Storage["🗄️ Storage"]
-            S3["S3 Bucket<br/>Encrypted ✅<br/>Versioning ✅<br/>Public Access Blocked ✅"]
-        end
-
-        subgraph Monitoring["📊 Monitoring"]
-            CW["CloudWatch<br/>Logs + Alarms"]
-            CT["CloudTrail<br/>API Audit Logs"]
-            SNS["SNS<br/>Email Alerts"]
-            FL["VPC Flow Logs<br/>Network Traffic"]
-        end
-
-    end
+    IGW["🚪 Internet Gateway"]
 
     Internet -->|HTTPS/HTTP| IGW
-    IGW --> WebServer
-    IGW --> Bastion
-    Bastion -->|SSH Jump| AppServer
-    WebServer -->|App Traffic| AppServer
-    AppServer --> S3
-    WebServer --> CW
-    AppServer --> CW
-    CW --> SNS
 
-    style PublicSubnet fill:#ffe6e6
-    style PrivateSubnet fill:#e6f3ff
-    style Storage fill:#e6ffe6
-    style Monitoring fill:#fff0e6
+    subgraph AWS["☁️ AWS Account: 103976430153"]
+        subgraph VPC["VPC: 10.0.0.0/16"]
+            subgraph Public["Public Subnet: 10.0.1.0/24"]
+                Web["🌐 Web Server\nPublic: 44.200.32.245\nPrivate: 10.0.1.x\nEncrypted EBS ✅"]
+                Bastion["🔐 Bastion Host\nPublic: 3.228.6.170\nSSH Jump Server\nEncrypted EBS ✅"]
+            end
+            subgraph Private["Private Subnet: 10.0.2.0/24"]
+                App["⚙️ App Server\nNO Public IP 🔒\nPrivate: 10.0.2.x\nEncrypted EBS ✅"]
+            end
+        end
+        subgraph Monitor["Monitoring"]
+            CW["📊 CloudWatch\nLogs + Alarms"]
+        end
+        subgraph Store["Storage"]
+            S3["🗄️ S3 Bucket\nEncrypted ✅\nVersioning ✅\nPublic Access Blocked ✅"]
+        end
+    end
+
+    IGW --> Web
+    IGW --> Bastion
+    Bastion -->|SSH Jump| App
+    Web -->|App Traffic| App
+    Web --> S3
+    App --> S3
+    CW --> Web
+    CW --> App
+
+    style Internet fill:#4a90d9,color:#ffffff
+    style IGW fill:#e8820c,color:#ffffff
+    style Public fill:#ffdddd,color:#000000
+    style Private fill:#ddeeff,color:#000000
+    style Monitor fill:#fff0dd,color:#000000
+    style Store fill:#ddffdd,color:#000000
+    style Web fill:#ffffff,color:#000000
+    style Bastion fill:#ffffff,color:#000000
+    style App fill:#ffffff,color:#000000
+    style CW fill:#ffffff,color:#000000
+    style S3 fill:#ffffff,color:#000000
 ```
 
 ---
