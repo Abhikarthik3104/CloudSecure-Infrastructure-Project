@@ -1,0 +1,26 @@
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/.terraform.lock.hcl
+
+# SSH Keys
+*.pem
+*.key
+cloudsecure-key
+cloudsecure-key.pub
+
+# AWS
+.aws/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/desktop.ini 
+desktop.ini 
+desktop.ini 
+desktop.ini 
+desktop.ini 
+desktop.ini  
