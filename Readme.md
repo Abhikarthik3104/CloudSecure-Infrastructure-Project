@@ -40,18 +40,18 @@ graph TB
     subgraph AWS["☁️ AWS Account: 103976430153"]
         subgraph VPC["VPC: 10.0.0.0/16"]
             subgraph Public["Public Subnet: 10.0.1.0/24"]
-                Web["🌐 Web Server\nPublic: 44.200.32.245\nPrivate: 10.0.1.x\nEncrypted EBS ✅"]
-                Bastion["🔐 Bastion Host\nPublic: 3.228.6.170\nSSH Jump Server\nEncrypted EBS ✅"]
+                Web["🌐 Web Server<br/>Public: 44.200.32.245<br/>Private: 10.0.1.x<br/>Encrypted EBS ✅"]
+                Bastion["🔐 Bastion Host<br/>Public: 3.228.6.170<br/>SSH Jump Server<br/>Encrypted EBS ✅"]
             end
             subgraph Private["Private Subnet: 10.0.2.0/24"]
-                App["⚙️ App Server\nNO Public IP 🔒\nPrivate: 10.0.2.x\nEncrypted EBS ✅"]
+                App["⚙️ App Server<br/>NO Public IP 🔒<br/>Private: 10.0.2.x<br/>Encrypted EBS ✅"]
             end
         end
         subgraph Monitor["Monitoring"]
-            CW["📊 CloudWatch\nLogs + Alarms"]
+            CW["📊 CloudWatch<br/>Logs + Alarms"]
         end
         subgraph Store["Storage"]
-            S3["🗄️ S3 Bucket\nEncrypted ✅\nVersioning ✅\nPublic Access Blocked ✅"]
+            S3["🗄️ S3 Bucket<br/>Encrypted ✅<br/>Versioning ✅<br/>Public Access Blocked ✅"]
         end
     end
 
@@ -108,13 +108,13 @@ sequenceDiagram
 ```mermaid
 graph TD
     Attack["🦹 Attack Attempt"]
-    Attack --> L1{"Layer 1: Network ACL\nSubnet Level\nAllow: HTTP, HTTPS, SSH\nDeny: Everything else"}
+    Attack --> L1{"Layer 1: Network ACL<br/>Subnet Level<br/>Allow: HTTP, HTTPS, SSH<br/>Deny: Everything else"}
     L1 -->|Blocked| Deny1["❌ Access Denied"]
-    L1 -->|Passed| L2{"Layer 2: Security Group\nInstance Level\nWeb SG: Allow 80, 443\nApp SG: Web Server only\nBastion SG: SSH only"}
+    L1 -->|Passed| L2{"Layer 2: Security Group<br/>Instance Level<br/>Web SG: Allow 80, 443<br/>App SG: Web Server only<br/>Bastion SG: SSH only"}
     L2 -->|Blocked| Deny2["❌ Access Denied"]
-    L2 -->|Passed| L3{"Layer 3: IAM Role\nPermission Level\nEC2 least privilege\nNo wildcard permissions\nSpecific ARNs only"}
+    L2 -->|Passed| L3{"Layer 3: IAM Role<br/>Permission Level<br/>EC2 least privilege<br/>No wildcard permissions<br/>Specific ARNs only"}
     L3 -->|Blocked| Deny3["❌ Access Denied"]
-    L3 -->|Passed| Access["✅ Access Granted\nLogged in CloudTrail"]
+    L3 -->|Passed| Access["✅ Access Granted<br/>Logged in CloudTrail"]
 
     style Attack fill:#ff6b6b,color:#ffffff
     style L1 fill:#ffcccc,color:#000000
